@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lets Liink</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="dot">L</div>
+          <div>
+            <strong>Lets Liink</strong>
+            <small>Host Console</small>
+          </div>
+        </div>
+
+        <div class="section-label">Event</div>
+        <button data-route="dashboard" class="nav active">Dashboard</button>
+        <button data-route="new-event" class="nav">New Event</button>
+
+        <div class="section-label">Guest Experience</div>
+        <button data-route="chat" class="nav">Chat</button>
+        <button data-route="messages" class="nav">Messages</button>
+        <button data-route="room-requests" class="nav">Room Requests</button>
+        <button data-route="questions" class="nav">Questions</button>
+        <button data-route="new-question" class="nav">New Question</button>
+
+        <div class="section-label">Results</div>
+        <button data-route="results" class="nav">Results</button>
+        <button data-route="stats-attending" class="nav">Stats: Attending</button>
+        <button data-route="stats-rsvp" class="nav">Stats: RSVP</button>
+        <button data-route="stats-rooms" class="nav">Stats: Rooms</button>
+        <button data-route="stats-rooms-joined" class="nav">Stats: Rooms Joined</button>
+        <button data-route="stats-room-details" class="nav">Stats: Room Details</button>
+
+        <div class="section-label">Settings</div>
+        <button data-route="settings" class="nav">Settings</button>
+        <button data-route="settings-staff" class="nav">Staff</button>
+        <button data-route="settings-layout" class="nav">Layout</button>
+        <button data-route="settings-shoutouts" class="nav">Shout-Outs</button>
+      </aside>
+
+      <main class="content">
+        <header>
+          <h1 id="title">Dashboard</h1>
+          <div class="status-pill">live</div>
+        </header>
+
+        <section id="screen"></section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
