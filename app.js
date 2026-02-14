@@ -7,6 +7,8 @@ const save = () => {
   localStorage.setItem(storageKey, JSON.stringify(state));
 };
 
+const spotImage = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80';
+
 const templates = {
   discover: () => {
     const deck = state.users.map((u) => `
@@ -30,52 +32,71 @@ const templates = {
     return `
       <div class="grid">
         <div class="card">
-          <h1>Discover matches</h1>
-          <p class="muted">Daily picks based on your vibe score and profile settings.</p>
+          <h1>Find people near you</h1>
+          <p class="muted">Build a match profile and connect with people around your city. Use Local Mixups to meet in person fast.</p>
           <div class="slider">${state.users.slice(0, 4).map((u)=>`<div class="card-mini">${u.name}, ${u.age}<br><span class="muted">${u.city}</span></div>`).join('')}</div>
-          <div class="row" style="margin-top:12px;"><span class="pill">Profile completion: 84%</span><span class="pill">Distance: 25 mi</span></div>
+          <div class="row" style="margin-top:12px;"><span class="pill">Profile completion: 84%</span><span class="pill">Distance filter: 20 mi</span></div>
           <div class="progress" aria-label="profile completion" style="margin-top:10px"><span style="--v:84"></span></div>
         </div>
         <div class="profile-stack">${deck}</div>
       </div>
     `;
   },
-  matches: () => {
+  spots: () => {
     return `
-      <div class="card">
-        <h2>Your Matches</h2>
-        <p class="muted">Only people who also liked you show up here.</p>
-        <div class="grid" style="margin-top:10px">
-          ${state.matches.map((m) => `
-            <div class="match-row">
-              <div class="avatar">${m.name[0]}</div>
+      <div class="grid">
+        <div class="card">
+          <h2>Local mix and mingle spots</h2>
+          <p class="muted">Places with live people and open energy to mingle with no pressure.</p>
+        </div>
+        ${state.spots.map((s) => `
+          <div class="card">
+            <div class="hero" style="grid-template-columns:1fr .9fr; align-items:center;">
+              <div class="image" style="min-height:180px;background:linear-gradient(130deg,#ff5fce22,#9d68ff22), url('${spotImage}') center/cover;"></div>
               <div>
-                <strong>${m.name}</strong><div class="small">${m.last}</div>
-                <div class="muted">${m.since}</div>
+                <h3>${s.name}</h3>
+                <div class="row"><span class="pill">${s.city}</span><span class="pill">${s.vibeType}</span><span class="pill">${s.cost}</span></div>
+                <p>${s.vibe} · ${s.meetup}</p>
+                <div class="row"><span class="small">Starts: ${s.checkIn}</span><span class="small">${s.spotsLeft} spots open</span></div>
+                <div class="row" style="margin-top:8px"><button class="btn primary" data-action="join-spot" data-id="${s.id}">Join Waitlist</button></div>
               </div>
-              <div class="pill">${m.unread ? `${m.unread} new` : 'open'}</div>
             </div>
-          `).join('')}
-        </div>
+          </div>
+        `).join('')}
       </div>
     `;
   },
-  messages: () => {
-    const m = state.conversations[0];
-    return `
-      <div class="card">
-        <h2>Messages</h2>
-        <div class="chats">
-          ${state.conversations.map((c) => `
-            <div class="chat">
-              <div class="line"><strong>${c.with}</strong><span class="pill">Open</span></div>
-              ${c.msgs.map((msg) => `<div><span style="font-weight:700">${msg.from}</span> · ${msg.text} <span class="muted">${msg.at}</span></div>`).join('')}
+  matches: () => `
+    <div class="card">
+      <h2>Your Matches</h2>
+      <p class="muted">Only people who also liked you show up here.</p>
+      <div class="grid" style="margin-top:10px">
+        ${state.matches.map((m) => `
+          <div class="match-row">
+            <div class="avatar">${m.name[0]}</div>
+            <div>
+              <strong>${m.name}</strong><div class="small">${m.last}</div>
+              <div class="muted">${m.since}</div>
             </div>
-          `).join('')}
-        </div>
+            <div class="pill">${m.unread ? `${m.unread} new` : 'open'}</div>
+          </div>
+        `).join('')}
       </div>
-    `;
-  },
+    </div>
+  `,
+  messages: () => `
+    <div class="card">
+      <h2>Messages</h2>
+      <div class="chats">
+        ${state.conversations.map((c) => `
+          <div class="chat">
+            <div class="line"><strong>${c.with}</strong><span class="pill">Open</span></div>
+            ${c.msgs.map((msg) => `<div><span style="font-weight:700">${msg.from}</span> · ${msg.text} <span class="muted">${msg.at}</span></div>`).join('')}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `,
   profile: () => `
     <div class="card">
       <h2>Your Profile</h2>
@@ -92,8 +113,8 @@ const templates = {
   `,
   activity: () => `
     <div class="card">
-      <h2>Activity Feed</h2>
-      <div class="feed">${state.activity.map(a => `<div class="feed-item"><strong>${a.event}</strong><div class="muted">${a.time}</div></div>`).join('')}</div>
+      <h2>Recent Activity</h2>
+      <div class="feed">${state.checkIns.map(a => `<div class="feed-item"><strong>${a.event}</strong><div class="muted">${a.time}</div></div>`).join('')}</div>
     </div>
   `,
   settings: () => `
@@ -101,7 +122,7 @@ const templates = {
       <h2>Settings</h2>
       <div class="row"><label class="toggle"><input type="checkbox" ${state.currentUser.visible === false ? '' : 'checked'} data-setting="visible"/> <span>Profile is visible</span></label></div>
       <div class="row"><label class="toggle"><input type="checkbox" checked data-setting="read-receipts"/> <span>Read receipts</span></label></div>
-      <div class="row"><label class="toggle"><input type="checkbox" data-setting="auto-play"/> <span>Auto-play stories</span></label></div>
+      <div class="row"><label class="toggle"><input type="checkbox" data-setting="auto-play"/> <span>Auto-play moments</span></label></div>
       <div class="action-bar"><button class="btn primary" data-action="resetDemo">Reset demo</button><button class="btn" data-action="boost">Enable profile boost</button></div>
     </div>
   `
@@ -135,7 +156,7 @@ function setHandlers() {
     const id = e.currentTarget.dataset.id;
     removeFromDiscover(id);
     toast('Liked! If they like back, you’ll match.');
-    saveState();
+    save();
     setRoute('discover');
   });
 
@@ -143,16 +164,31 @@ function setHandlers() {
     const id = e.currentTarget.dataset.id;
     removeFromDiscover(id);
     toast('Passed.');
-    saveState();
+    save();
     setRoute('discover');
   });
 
   on('[data-action="super"]', (e) => {
     const id = e.currentTarget.dataset.id;
     removeFromDiscover(id);
-    toast('Super like sent 💜');
-    saveState();
+    toast('Super like sent 💛');
+    save();
     setRoute('discover');
+  });
+
+  on('[data-action="join-spot"]', (e) => {
+    const id = e.currentTarget.dataset.id;
+    const spot = state.spots.find((s) => s.id === id);
+    if (!spot) return;
+    if (spot.spotsLeft <= 0) {
+      toast('No spots left there right now');
+      return;
+    }
+    spot.spotsLeft -= 1;
+    state.checkIns.unshift({ event: `You joined waitlist at ${spot.name}`, time: 'Just now' });
+    toast(`Joined ${spot.name} waitlist ✅`);
+    save();
+    setRoute('spots');
   });
 
   on('[data-action="super-like"]', () => toast('Super like streak: 2 left today'));
@@ -163,7 +199,7 @@ function setHandlers() {
     state.currentUser.city = document.getElementById('p-city').value;
     state.currentUser.bio = document.getElementById('p-bio').value;
     toast('Profile saved ✅');
-    saveState();
+    save();
   });
 
   on('[data-action="shufflePrompt"]', () => {
@@ -184,7 +220,7 @@ function setHandlers() {
     checkbox.addEventListener('change', () => {
       const key = checkbox.dataset.setting;
       state.currentUser[key] = checkbox.checked;
-      saveState();
+      save();
       toast(`${key} ${checkbox.checked ? 'enabled' : 'disabled'}`);
     });
   });
@@ -195,10 +231,6 @@ function setHandlers() {
       window.location.hash = btn.dataset.route;
     };
   });
-}
-
-function saveState() {
-  localStorage.setItem('letsliink-dating-state-v1', JSON.stringify(state));
 }
 
 const route = (window.location.hash || '#discover').replace('#', '');
