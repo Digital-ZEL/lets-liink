@@ -1,77 +1,39 @@
-const initialState = {
-  event: {
-    id: 'event_demo_001',
-    title: 'Spring Founders Mixer',
-    host: 'Jordan Reed',
-    attendees: 438,
-    rooms: 12,
-    rsvp: 286,
-    joined: 154,
-    status: 'live',
-    type: 'virtual',
-    slug: 'spring-founders-mixer',
-  },
-  metrics: {
-    clicks: 1240,
-    totalQuestions: 24,
-    answeredQuestions: 15,
-    messagesIn: 112,
-    shoutoutsSent: 9,
-  },
-  roomList: [
-    { id: 'r01', name: 'Room 01', capacity: 30, currentOccupancy: 18, status: 'Open' },
-    { id: 'r02', name: 'Room 02', capacity: 35, currentOccupancy: 30, status: 'Almost full' },
-    { id: 'r03', name: 'Room 03', capacity: 24, currentOccupancy: 12, status: 'Open' },
-    { id: 'r04', name: 'Room 04', capacity: 40, currentOccupancy: 27, status: 'Open' },
-    { id: 'r05', name: 'Room 05', capacity: 26, currentOccupancy: 18, status: 'Open' },
-    { id: 'r06', name: 'Room 06', capacity: 28, currentOccupancy: 20, status: 'Open' },
+const seed = {
+  currentUser: { name: 'Maya Chen', age: 29, city: 'New York', pronouns: 'she/her', bio: 'Weekend hiker, foodie, and startup junkie. Looking for meaningful conversations and great coffee.', vibe: 'Honest, goofy, and curious.' },
+  users: [
+    { id: 'u1', name: 'Jordan', age: 31, city: 'New York', distance: '2 mi', interests: ['Coffee', 'Travel', 'Jazz'], vibe: 'Warm and spontaneous' },
+    { id: 'u2', name: 'Lena', age: 27, city: 'Brooklyn', distance: '4 mi', interests: ['Reading', 'Food', 'Pilates'], vibe: 'Calm, reflective, and funny' },
+    { id: 'u3', name: 'Noah', age: 33, city: 'Jersey City', distance: '9 mi', interests: ['Rock climbing', 'Comedy', 'Running'], vibe: 'Active and direct' },
+    { id: 'u4', name: 'Amara', age: 26, city: 'Queens', distance: '11 mi', interests: ['K-pop', 'Keto', 'Museums'], vibe: 'Creative and chill' },
+    { id: 'u5', name: 'Rae', age: 30, city: 'Manhattan', distance: '5 mi', interests: ['Startup', 'Cycling', 'Sushi'], vibe: 'Ambitious and playful' }
   ],
-  questions: [
-    { id: 'q1', who: 'Maya', text: 'Is there a wheelchair friendly entrance?', status: 'Queued' },
-    { id: 'q2', who: 'Toby', text: 'Can we request a Q&A at 8:30?', status: 'Answered' },
-    { id: 'q3', who: 'Luis', text: 'Will recordings be shared after event?', status: 'Pending' },
-    { id: 'q4', who: 'Noah', text: 'Can we request breakout links in the lobby?', status: 'Queued' },
+  matches: [
+    { id: 'm1', name: 'Lena', last: 'Would love to meet up for tacos 🍽', unread: 2, active: true, since: 'Matched today' },
+    { id: 'm2', name: 'Rae', last: 'Your photo at the beach is awesome.', unread: 0, active: true, since: 'Yesterday' },
+    { id: 'm3', name: 'Amara', last: 'No pressure, whenever you are ready.', unread: 1, active: true, since: '2 days ago' }
   ],
-  messages: [
-    { id: 'm1', who: 'Host', text: 'Welcome everyone to the session! We are going live in 10 minutes.', scope: 'chat', delivered: true, pinned: false },
-    { id: 'm2', who: 'Ava', text: 'Can we get the deck link?', scope: 'chat', delivered: true, pinned: false },
-    { id: 'm3', who: 'Host', text: 'Absolutely. Sending now in the chat.', scope: 'chat', delivered: true, pinned: true },
-  ],
-  roomRequests: [
-    { id: 'rr1', name: 'Jasmine', roomId: 'r04', status: 'Assigned' },
-    { id: 'rr2', name: 'Kai', roomId: '', status: 'Pending' },
-    { id: 'rr3', name: 'Noah', roomId: '', status: 'Need follow-up' },
-  ],
-  staff: [
-    { id: 's1', name: 'Jordan Reed', role: 'Owner', scope: 'All rooms' },
-    { id: 's2', name: 'Maya Lopez', role: 'Co-Host', scope: 'Stage + Q&A' },
-    { id: 's3', name: 'Dina Shaw', role: 'Moderator', scope: 'Chat Review' },
-  ],
-  shoutouts: [
-    { id: 'sh1', text: 'Welcome note from keynote speaker', status: 'active' },
-    { id: 'sh2', text: 'Top contributor: @Kai', status: 'active' },
-    { id: 'sh3', text: 'Shout out to Room 03 team for great activity', status: 'active' },
+  conversations: [
+    { with: 'Lena', msgs: [
+      { from: 'Lena', text: 'Hey! Are you free this weekend?', at: '10:10 AM' },
+      { from: 'You', text: 'Yes, what did you have in mind?', at: '10:12 AM' },
+      { from: 'Lena', text: 'Coffee + walk around the East River. Fair?', at: '10:13 AM' },
+    ]},
+    { with: 'Rae', msgs: [
+      { from: 'Rae', text: 'Your profile says you like jazz ☕', at: '9:04 PM' },
+      { from: 'You', text: 'Only when it comes with pastries.', at: '9:06 PM' }
+    ]}
   ],
   activity: [
-    { id: 'a1', text: 'Maya submitted a room request for Room 04.', at: '2m ago' },
-    { id: 'a2', text: 'User added new question: "Will there be recordings?"', at: '4m ago' },
-    { id: 'a3', text: '11 shout-outs delivered to stage.', at: '6m ago' },
-    { id: 'a4', text: '2 room requests were assigned in under 1 minute.', at: '11m ago' },
-  ],
+    { event: 'Liked Jordan', time: 'Now' },
+    { event: 'Super liked Lena', time: '10m ago' },
+    { event: 'Noah sent new story', time: '22m ago' }
+  ]
 };
 
-const demoStorageKey = 'letsliink-demo-state-v1';
+const storageKey = 'letsliink-dating-state-v1';
 
-const getStoredState = () => {
-  const raw = localStorage.getItem(demoStorageKey);
-  if (!raw) return JSON.parse(JSON.stringify(initialState));
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return JSON.parse(JSON.stringify(initialState));
-  }
-};
-
-const saveState = (state) => {
-  localStorage.setItem(demoStorageKey, JSON.stringify(state));
+const getDatingState = () => {
+  const raw = localStorage.getItem(storageKey);
+  if (!raw) return JSON.parse(JSON.stringify(seed));
+  try { return JSON.parse(raw); } catch { return JSON.parse(JSON.stringify(seed)); }
 };
